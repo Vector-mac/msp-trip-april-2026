@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minneapolis Trip | April 10-12, 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        .refresh-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .itinerary-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .itinerary-item:last-child {
+            border-bottom: none;
+        }
+        .time {
+            background: #667eea;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+        }
+        .event-details h3 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+        .event-details p {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .restaurant-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+        }
+        .restaurant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .restaurant-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #667eea;
+            text-decoration: none;
+        }
+        .restaurant-name:hover {
+            text-decoration: underline;
+        }
+        .map-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            color: #4285f4;
+            text-decoration: none;
+            margin-top: 8px;
+        }
+        .map-link:hover {
+            text-decoration: underline;
+        }
+        .rating {
+            display: flex;
+            gap: 8px;
+        }
+        .thumb-btn {
+            background: none;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        .thumb-btn:hover {
+            border-color: #667eea;
+        }
+        .thumb-btn.active-up {
+            background: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+        .thumb-btn.active-down {
+            background: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+        .restaurant-type {
+            font-size: 0.8rem;
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .restaurant-desc {
+            font-size: 0.85rem;
+            color: #555;
+        }
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+        .note.atlas {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+        .weather-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+        .weather-icon {
+            font-size: 3rem;
+        }
+        .weather-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        .weather-info p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        .tips-list {
+            list-style: none;
+        }
+        .tips-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 0.9rem;
+        }
+        .tips-list li::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+        .concert-info {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        .concert-info h3 {
+            margin-bottom: 10px;
+        }
+        .lineup {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .lineup-item {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .lineup-item.headliner {
+            background: rgba(255,255,255,0.3);
+            font-weight: 600;
+        }
+        .transit-card {
+            background: #f0f7ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #0066cc;
+        }
+        .transit-card h4 {
+            color: #0066cc;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .transit-detail {
+            font-size: 0.85rem;
+            color: #555;
+            margin-bottom: 4px;
+        }
+        .transit-time {
+            font-weight: 600;
+            color: #0066cc;
+        }
+        .updated {
+            text-align: center;
+            color: #999;
+            font-size: 0.8rem;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Minneapolis Trip</h1>
+        <p>April 10-12, 2026 • Jeff + Marcie</p>
+        <button class="refresh-btn" onclick="location.reload()">Refresh</button>
+    </div>
+
+    <div class="container">
+        <!-- Weather -->
+        <div class="weather-card">
+            <div class="weather-icon">🌤️</div>
+            <div class="weather-info">
+                <h3>Weekend Forecast</h3>
+                <p>50-60°F highs, 35-45°F lows<br>Pack layers + light jacket</p>
+            </div>
+        </div>
+
+        <!-- Atlas Message Area -->
+        <div class="section" id="atlas-messages">
+            <h2>Atlas Updates</h2>
+            <div class="note atlas">
+                <strong>Friday 4:55 PM:</strong> You're here! 🎉 Get off at Nicollet Mall Station (not Government Plaza) — it's only 2 minutes from your hotel. Two Morgan Wallen shows this weekend — tonight AND Saturday. Have an absolute blast! 🤠
+            </div>
+        </div>
+
+        <!-- Transit -->
+        <div class="section">
+            <h2>🚊 Airport Transit</h2>
+            
+            <div class="transit-card">
+                <h4>🛬 Friday: MSP Airport → Downtown</h4>
+                <p class="transit-detail"><span class="transit-time">Blue Line Light Rail</span> — $2.50 per person</p>
+                <p class="transit-detail">📍 Follow signs to "Ground Transport/Light Rail" at baggage claim</p>
+                <p class="transit-detail">⏱️ ~25 minutes to Nicollet Mall Station (2 min walk to hotel)</p>
+                <p class="transit-detail">🚊 Runs every 10-15 minutes</p>
+                <p class="transit-detail"><a href="https://www.metrotransit.org/metro-blue-line" target="_blank" style="color:#0066cc;">Metro Transit Blue Line info</a></p>
+            </div>
+            
+            <div class="transit-card">
+                <h4>🛫 Sunday: Downtown → MSP Airport</h4>
+                <p class="transit-detail"><span class="transit-time">Recommended departure: 7:45 AM</span></p>
+                <p class="transit-detail">🚊 Blue Line from Nicollet Mall Station (2 min walk from hotel)</p>
+                <p class="transit-detail">⏱️ ~25 minutes to airport</p>
+                <p class="transit-detail">✈️ Arrives airport by 8:10 AM — plenty of time for 9:45 AM flight</p>
+                <p class="transit-detail">💡 Earlier is fine too — grab coffee at airport</p>
+            </div>
+        </div>
+
+        <!-- Itinerary -->
+        <div class="section">
+            <h2>📅 Itinerary</h2>
+            
+            <div class="itinerary-item">
+                <span class="time">FRI</span>
+                <div class="event-details">
+                    <h3>Arrive Minneapolis</h3>
+                    <p>1:40 PM — Land at MSP<br>2:15 PM — Light rail to downtown<br>Check-in: <a href="https://www.google.com/maps/search/?api=1&query=Minneapolis+Marriott+City+Center" target="_blank" style="color:#667eea;">Marriott City Center</a><br>30 South 7th Street</p>
+                </div>
+            </div>
+            
+            <div class="itinerary-item">
+                <span class="time">FRI<br>5:30P</span>
+                <div class="event-details">
+                    <h3>Morgan Wallen Concert — Night 1</h3>
+                    <p><a href="https://www.google.com/maps/search/?api=1&query=U.S.+Bank+Stadium+Minneapolis" target="_blank" style="color:#667eea;">U.S. Bank Stadium</a> • 8 min walk from hotel</p>
+                </div>
+            </div>
+            
+            <div class="itinerary-item">
+                <span class="time">SAT<br>AM</span>
+                <div class="event-details">
+                    <h3>Explore Minneapolis</h3>
+                    <p>Walker Art Center, Minnehaha Falls, or Midtown Market</p>
+                </div>
+            </div>
+            
+            <div class="itinerary-item">
+                <span class="time">SAT<br>5:30P</span>
+                <div class="event-details">
+                    <h3>Morgan Wallen Concert — Night 2</h3>
+                    <p><a href="https://www.google.com/maps/search/?api=1&query=U.S.+Bank+Stadium+Minneapolis" target="_blank" style="color:#667eea;">U.S. Bank Stadium</a> • 8 min walk from hotel</p>
+                </div>
+            </div>
+            
+            <div class="itinerary-item">
+                <span class="time">SUN</span>
+                <div class="event-details">
+                    <h3>Check-out + Depart</h3>
+                    <p>12:00 PM checkout<br>7:45 AM — Leave for airport via light rail</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concert Info -->
+        <div class="section">
+            <h2>Concert Details</h2>
+            <div class="concert-info">
+                <h3>Morgan Wallen — Still The Problem Tour</h3>
+                <p>🎸 Friday, April 10 • 5:30 PM<br>🎸 Saturday, April 11 • 5:30 PM</p>
+                <div class="lineup">
+                    <div class="lineup-item headliner">Morgan Wallen</div>
+                    <div class="lineup-item">HARDY</div>
+                    <div class="lineup-item">Gavin Adcock</div>
+                    <div class="lineup-item">Vincent Mason</div>
+                </div>
+            </div>
+            <div class="note">
+                <strong>Pro tip:</strong> Eat before the show — lines get crazy. Walk back to hotel after (8 min) to avoid rideshare surge.
+            </div>
+        </div>
+
+        <!-- Friday Dinner -->
+        <div class="section">
+            <h2>Friday Dinner Options</h2>
+            
+            <div class="restaurant-card" data-id="mannys">
+                <div class="restaurant-header">
+                    <a href="https://www.google.com/maps/search/?api=1&query=Manny's+Steakhouse+Minneapolis" target="_blank" class="restaurant-name">Manny's Steakhouse</a>
+                    <div class="rating">
+                        <button class="thumb-btn" onclick="rate('mannys', 'up')">👍</button>
+                        <button class="thumb-btn" onclick="rate('mannys', 'down')">👎</button>
+                    </div>
+                </div>
+                <div class="restaurant-type">Upscale Steakhouse</div>
+                <div class="restaurant-desc">Downtown institution. Dry-aged beef, old-school vibe. Morton's-level experience.</div>
+            </div>
+            
+            <div class="restaurant-card" data-id="murrays">
+                <div class="restaurant-header">
+                    <a href="https://www.google.com/maps/search/?api=1&query=Murray's+Restaurant+Minneapolis" target="_blank" class="restaurant-name">Murray's</a>
+                    <div class="rating">
+                        <button class="thumb-btn" onclick="rate('murrays', 'up')">👍</button>
+                        <button class="thumb-btn" onclick="rate('murrays', 'down')">👎</button>
+                    </div>
+                </div>
+                <div class="restaurant-type">Local Legend • Family-owned since 1946</div>
+                <div class="restaurant-desc">Famous butter knife steaks. Local history + consistently excellent. Marcie will love the atmosphere.</div>
+            </div>
+            
+            <div class="restaurant-card" data-id="matts">
+                <div class="restaurant-header">
+                    <a href="https://www.google.com/maps/search/?api=1&query=Matt's+Bar+Minneapolis+Jucy+Lucy" target="_blank" class="restaurant-name">Matt's Bar</a>
+                    <div class="rating">
+                        <button class="thumb-btn" onclick="rate('matts', 'up')">👍</button>
+                        <button class="thumb-btn" onclick="rate('matts', 'down')">👎</button>
+                    </div>
+                </div>
+                <div class="restaurant-type">Iconic Burger Joint</div>
+                <div class="restaurant-desc">Home of the Jucy Lucy (cheese-stuffed burger). Cash-only, expect a wait, totally worth it.</div>
+            </div>
+        </div>
+
+        <!-- Saturday Pre-Concert -->
+        <div class="section">
+            <h2>Saturday Pre-Concert</h2>
+            
+            <div class="restaurant-card" data-id="spoon">
+                <div class="restaurant-header">
+                    <a href="https://www.google.com/maps/search/?api=1&query=Spoon+and+Stable+Minneapolis" target="_blank" class="restaurant-name">Spoon and Stable</a>
+                    <div class="rating">
+                        <button class="thumb-btn" onclick="rate('spoon', 'up')">👍</button>
+                        <button class="thumb-btn" onclick="rate('spoon', 'down')">👎</button>
+                    </div>
+                </div>
+                <div class="restaurant-type">French-Inspired • 5 min from stadium</div>
+                <div class="restaurant-desc">Local favorite. Steak frites + gnocchi options. Perfect pre-concert spot.</div>
+            </div>
+            
+            <div class="restaurant-card" data-id="redrabbit">
+                <div class="restaurant-header">
+                    <a href="https://www.google.com/maps/search/?api=1&query=Red+Rabbit+Minneapolis" target="_blank" class="restaurant-name">Red Rabbit</a>
+                    <div class="rating">
+                        <button class="thumb-btn" onclick="rate('redrabbit', 'up')">👍</button>
+                        <button class="thumb-btn" onclick="rate('redrabbit', 'down')">👎</button>
+                    </div>
+                </div>
+                <div class="restaurant-type">Italian/Pizza • Near stadium</div>
+                <div class="restaurant-desc">Lively atmosphere, quick and delicious. Easy pre-concert energy.</div>
+            </div>
+        </div>
+
+        <!-- Coffee -->
+        <div class="section">
+            <h2>Coffee Spots</h2>
+            <div class="tips-list">
+                <li><a href="https://www.google.com/maps/search/?api=1&query=Spyhouse+Coffee+Minneapolis" target="_blank" style="color:#667eea;"><strong>Spyhouse Coffee</strong></a> — Local favorite, 4.4★, 2 blocks from hotel</li>
+                <li><a href="https://www.google.com/maps/search/?api=1&query=Vitality+Roasting+Minneapolis" target="_blank" style="color:#667eea;"><strong>Vitality Roasting</strong></a> — Solid local roaster</li>
+                <li><strong>Starbucks</strong> — In your Marriott lobby (reliable fallback)</li>
+            </div>
+        </div>
+
+        <!-- Saturday Activities -->
+        <div class="section">
+            <h2>Saturday Morning Options</h2>
+            <div class="tips-list">
+                <li><strong>Walker Art Center + Sculpture Garden</strong> — Iconic spoon bridge, free garden, 10 min away</li>
+                <li><strong>Minnehaha Falls</strong> — Beautiful waterfall park, 15 min away</li>
+                <li><strong>Midtown Global Market</strong> — International food hall, local roasters</li>
+            </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="section">
+            <h2>Local Tips</h2>
+            <div class="tips-list">
+                <li><strong>Skyway System:</strong> 9 miles of enclosed walkways — great if weather turns</li>
+                <li><strong>Light Rail:</strong> $2.50 from airport to downtown, drops at stadium</li>
+                <li><strong>Hotel to Stadium:</strong> 0.4 miles, 8-10 min walk</li>
+                <li><strong>Friday Morgan Wallen:</strong> Different lineup (Thomas Rhett) — same venue</li>
+            </div>
+        </div>
+
+        <div class="updated">
+            Last updated: April 10, 2026<br>
+            Tap Refresh for latest info
+        </div>
+    </div>
+
+    <script>
+        // Load saved ratings
+        document.addEventListener('DOMContentLoaded', function() {
+            const ratings = JSON.parse(localStorage.getItem('minneapolis_ratings') || '{}');
+            for (const [id, rating] of Object.entries(ratings)) {
+                const card = document.querySelector(`[data-id="${id}"]`);
+                if (card) {
+                    const btn = card.querySelector(rating === 'up' ? '.thumb-btn:first-child' : '.thumb-btn:last-child');
+                    if (btn) btn.classList.add(rating === 'up' ? 'active-up' : 'active-down');
+                }
+            }
+        });
+
+        // Save rating
+        function rate(id, type) {
+            const ratings = JSON.parse(localStorage.getItem('minneapolis_ratings') || '{}');
+            const card = document.querySelector(`[data-id="${id}"]`);
+            const buttons = card.querySelectorAll('.thumb-btn');
+            
+            // Toggle off if already active
+            if (ratings[id] === type) {
+                delete ratings[id];
+                buttons.forEach(btn => btn.classList.remove('active-up', 'active-down'));
+            } else {
+                ratings[id] = type;
+                buttons.forEach(btn => btn.classList.remove('active-up', 'active-down'));
+                const activeBtn = type === 'up' ? buttons[0] : buttons[1];
+                activeBtn.classList.add(type === 'up' ? 'active-up' : 'active-down');
+            }
+            
+            localStorage.setItem('minneapolis_ratings', JSON.stringify(ratings));
+        }
+    </script>
+</body>
+</html>
